@@ -133,6 +133,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: LowPolyFlashlight
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 3ed0b85b7b8298948bdf4410bd3668cc, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 3ed0b85b7b8298948bdf4410bd3668cc, type: 3}
       propertyPath: m_LocalScale.x
       value: 1
@@ -183,6 +187,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 3ed0b85b7b8298948bdf4410bd3668cc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: 3ed0b85b7b8298948bdf4410bd3668cc, type: 3}
+      propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

@@ -8,11 +8,14 @@ public class Player : MonoBehaviour
     [SerializeField] private float _speed = 4f;
     [SerializeField] private float _rotationSpeed = 10f;
     
-    private Transform _mainCameraTransform;
+    private CharacterController _characterController;
     private Animator _animator;
+    
+    private Transform _mainCameraTransform;
 
     private void Awake()
     {
+        _characterController = GetComponent<CharacterController>();
         _animator = GetComponentInChildren<Animator>();
     }
 
@@ -23,24 +26,19 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        var forward = _mainCameraTransform.forward;
-        forward.y = 0f;
-        forward.Normalize();
-
-        var right = Vector3.Cross(Vector3.up, forward);
-
         var input = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
-
-        transform.position += right * (input.x * _speed * Time.deltaTime);
-        transform.position += forward * (input.z * _speed * Time.deltaTime);
-
-        _animator.SetFloat(AnimatorSpeedParam, input.magnitude * _speed);
-
-        if (input.magnitude == 0f) return;
         
         var direction = _mainCameraTransform.TransformDirection(input);
         direction.y = 0f;
         direction.Normalize();
+
+        var movement = direction * (_speed * Time.deltaTime);
+        movement.y = Physics.gravity.y * Time.deltaTime;
+        _characterController.Move(movement);
+
+        _animator.SetFloat(AnimatorSpeedParam, input.magnitude * _speed);
+
+        if (input.magnitude == 0f) return;
         
         var targetRotation = Quaternion.LookRotation(direction, transform.up);
         transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, _rotationSpeed * Time.deltaTime);

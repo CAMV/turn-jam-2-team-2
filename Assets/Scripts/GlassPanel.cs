@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class GlassPanel : MonoBehaviour
@@ -11,6 +12,14 @@ public class GlassPanel : MonoBehaviour
     [SerializeField] private MeshRenderer _glassMR;
 
     private Flashlight _lightSource;
+    private MaterialPropertyBlock _materialPropertyBlock;
+
+    private void Awake()
+    {
+        _materialPropertyBlock = new MaterialPropertyBlock();
+        
+        SetColor(_color, Color.black);
+    }
 
     private void Update()
     {
@@ -36,13 +45,7 @@ public class GlassPanel : MonoBehaviour
             _lightSource.Light.intensity = _lightSource.MaxIntensity - intensity;
         }
         
-        if (_glassMR != null)
-        {
-            var propertyBlock = new MaterialPropertyBlock();
-            propertyBlock.SetColor(BaseColor, _color);
-            propertyBlock.SetColor(EmissionColor, _color * intensity / lightSource.Light.intensity);
-            _glassMR.SetPropertyBlock(propertyBlock);
-        }
+        SetColor(_color, _color * intensity / lightSource.Light.intensity);
 
         _spotLight.intensity = intensity * (_rangeMultiplier * _rangeMultiplier);
         _spotLight.range = (lightSource.Light.range - distanceToPlayer) * _rangeMultiplier;
@@ -65,7 +68,14 @@ public class GlassPanel : MonoBehaviour
             _spotLight.transform.localRotation = Quaternion.Euler(0, Mathf.Clamp(angle, -40, 40), 0);
         }
     }
-    
+
+    private void SetColor(Color baseColor, Color emissionColor)
+    {
+        _materialPropertyBlock.SetColor(BaseColor, baseColor);
+        _materialPropertyBlock.SetColor(EmissionColor, emissionColor);
+        _glassMR.SetPropertyBlock(_materialPropertyBlock);
+    }
+
     public void DisableSpotlight()
     {
         _spotLight.gameObject.SetActive(false);

@@ -2,46 +2,55 @@ using UnityEngine;
 
 public class GlassPanel : MonoBehaviour
 {
+    private static readonly int EmissionColor = Shader.PropertyToID("_EmissionColor");
+    private static readonly int BaseColor = Shader.PropertyToID("_BaseColor");
+    
     [SerializeField] private Light _spotLight;
     [SerializeField] private Color _color;
     [SerializeField] private float _rangeMultiplier;
     [SerializeField] private MeshRenderer _glassMR;
 
-    private static readonly int EmissionColor = Shader.PropertyToID("_EmissionColor");
-    private static readonly int BaseColor = Shader.PropertyToID("_BaseColor");
+    private Flashlight _lightSource;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    private void Start()
+    private void Update()
     {
-        Locator.GameManager.SubscribeGlassLight(UpdateLight);
+        if (!_spotLight.gameObject.activeSelf) return;
+        
+        UpdateLight(_lightSource);
     }
-
-    // Update is called once per frame
-    private void UpdateLight(Vector3 playerPos, Light playerLight)
+    
+    public void UpdateLight(Flashlight lightSource)
     {
-        var distanceToPlayer = Vector3.Distance(playerPos, transform.position);
-        var lightDir = (transform.position - playerPos).normalized;
+        _lightSource = lightSource;
+        
+        _spotLight.gameObject.SetActive(true);
+        
+        var distanceToPlayer = Vector3.Distance(_lightSource.transform.position, transform.position);
+        var lightDir = _lightSource.transform.forward;
         var lghtDotFwrd = Mathf.Abs(Vector3.Dot(lightDir, transform.forward));
-        var intensity = (playerLight.intensity / Mathf.Pow(Mathf.Clamp(distanceToPlayer, 1, int.MaxValue), 2)) *
+        var intensity = (_lightSource.MaxIntensity / Mathf.Pow(Mathf.Clamp(distanceToPlayer, 1, int.MaxValue), 2)) *
                         lghtDotFwrd;
 
-        _spotLight.gameObject.SetActive(distanceToPlayer < playerLight.range);
-
+        if (_lightSource.ClosestGlassPanel == this)
+        {
+            _lightSource.Light.intensity = _lightSource.MaxIntensity - intensity;
+        }
+        
         if (_glassMR != null)
         {
             var propertyBlock = new MaterialPropertyBlock();
             propertyBlock.SetColor(BaseColor, _color);
-            propertyBlock.SetColor(EmissionColor, _color * intensity / playerLight.intensity);
+            propertyBlock.SetColor(EmissionColor, _color * intensity / lightSource.Light.intensity);
             _glassMR.SetPropertyBlock(propertyBlock);
         }
 
         _spotLight.intensity = intensity * (_rangeMultiplier * _rangeMultiplier);
-        _spotLight.range = (playerLight.range - distanceToPlayer) * _rangeMultiplier;
-        _spotLight.color = playerLight.color * _color;
+        _spotLight.range = (lightSource.Light.range - distanceToPlayer) * _rangeMultiplier;
+        _spotLight.color = lightSource.Light.color * _color;
 
         _spotLight.spotAngle = 128 / Mathf.Clamp(_rangeMultiplier, 1, 4);
         _spotLight.innerSpotAngle = Mathf.Lerp(0, _spotLight.spotAngle,
-            (1 - (distanceToPlayer / playerLight.range)) * lghtDotFwrd);
+            (1 - (distanceToPlayer / lightSource.Light.range)) * lghtDotFwrd);
 
         var escalar = Vector3.Dot(lightDir, transform.right) > 0 ? 1 : -1;
         var angle = Vector3.Angle(transform.forward, lightDir) * escalar;
@@ -55,5 +64,10 @@ public class GlassPanel : MonoBehaviour
         {
             _spotLight.transform.localRotation = Quaternion.Euler(0, Mathf.Clamp(angle, -40, 40), 0);
         }
+    }
+    
+    public void DisableSpotlight()
+    {
+        _spotLight.gameObject.SetActive(false);
     }
 }

@@ -1,11 +1,35 @@
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+namespace TurnJam2
 {
-    [SerializeField] private Player _player;
-    
-    private void Awake()
+    public class GameManager : MonoBehaviour
     {
-        Locator.ProvideGameManager(this);
-    }
+        [SerializeField] private Player _player;
+        [SerializeField] private FallRespawner _fallRespawner;
+        [SerializeField] private CheckPointSaver _fallbackCheckpoint;
+        
+        private CheckPointSaver _checkPoint;
+    
+        private void Awake()
+        {
+            Locator.ProvideGameManager(this);
+            _fallRespawner.OnFall += RespawnPlayer;
+        }
+
+        private void OnDestroy()
+        {
+            _fallRespawner.OnFall -= RespawnPlayer;
+        }
+
+        private void RespawnPlayer()
+        {
+            if (_checkPoint != null) _checkPoint.ReSpawn(_player);
+            else _fallbackCheckpoint.ReSpawn(_player);
+        }
+
+        public void AssignCheckPoint(CheckPointSaver checkPointSaver)
+        {
+            _checkPoint = checkPointSaver;
+        }
+    }  
 }

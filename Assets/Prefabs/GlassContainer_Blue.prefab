@@ -22,7 +22,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3647377632992942657, guid: 476af1ccec842f944a2e739fa56a27b2, type: 3}
       propertyPath: m_Name
-      value: GlassContainer_Blue Variant
+      value: GlassContainer_Blue
       objectReference: {fileID: 0}
     - target: {fileID: 4167454791125926139, guid: 476af1ccec842f944a2e739fa56a27b2, type: 3}
       propertyPath: m_LocalPosition.x

@@ -1,63 +1,65 @@
 using System.Collections.Generic;
+using TurnJam2.Interfaces;
 using UnityEngine;
 
-public class Flashlight : MonoBehaviour
+namespace TurnJam2
 {
-    [SerializeField] private Light _light;
-    [SerializeField] private float _maxIntensity = 5f;
-    
-    public Light Light => _light;
-    public float MaxIntensity => _maxIntensity;
-    
-    private readonly List<GlassPanel> _affectedGlassPanels = new();
-    
-    public GlassPanel ClosestGlassPanel { get; private set; }
-    
-    private void Awake()
+    public class Flashlight : MonoBehaviour
     {
-        ResetIntensity();
-    }
-
-    private void ResetIntensity()
-    {
-        _light.intensity = _maxIntensity;
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.TryGetComponent<GlassPanel>(out var glassPanel))
-        {
-            _affectedGlassPanels.Add(glassPanel);
-            UpdateClosestGlassPanel();
-            
-            glassPanel.UpdateLight(this);
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.TryGetComponent<GlassPanel>(out var glassPanel))
-        {
-            _affectedGlassPanels.Remove(glassPanel);
-            UpdateClosestGlassPanel();
-            
-            ResetIntensity();
-            glassPanel.DisableSpotlight();
-        }
-    }
-
-    private void UpdateClosestGlassPanel()
-    {
-        var minDistance = float.MaxValue;
+        [SerializeField] private Light _light;
+        [SerializeField] private float _maxIntensity = 5f;
         
-        foreach (var panel in _affectedGlassPanels)
+        public Light Light => _light;
+        public float MaxIntensity => _maxIntensity;
+        
+        private readonly List<ILightInteractable> _affectedLightInteractables = new();
+        
+        public ILightInteractable ClosestLightInteractor { get; private set; }
+        
+        private void Awake()
         {
-            var distance = Vector3.Distance(panel.transform.position, transform.position);
-            if (distance < minDistance)
+            ResetIntensity();
+        }
+    
+        private void ResetIntensity()
+        {
+            _light.intensity = _maxIntensity;
+        }
+    
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.TryGetComponent<ILightInteractable>(out var lightInteractable))
             {
-                ClosestGlassPanel = panel;
+                _affectedLightInteractables.Add(lightInteractable);
+                UpdateClosestGlassPanel();
+                lightInteractable.TurnOn(this);
+            }
+        }
+    
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.TryGetComponent<ILightInteractable>(out var lightInteractable))
+            {
+                _affectedLightInteractables.Remove(lightInteractable);
+                UpdateClosestGlassPanel();
+                
+                ResetIntensity();
+                lightInteractable.TurnOff();
+            }
+        }
+    
+        private void UpdateClosestGlassPanel()
+        {
+            var minDistance = float.MaxValue;
+            
+            foreach (var lightInteractable in _affectedLightInteractables)
+            {
+                var distance = Vector3.Distance(lightInteractable.gameObject.transform.position, transform.position);
+                if (!(distance < minDistance)) continue;
+                ClosestLightInteractor = lightInteractable;
                 minDistance = distance;
             }
         }
     }
 }
+

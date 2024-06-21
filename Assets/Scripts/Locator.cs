@@ -1,9 +1,12 @@
-public static class Locator
+namespace TurnJam2
 {
-    public static void ProvideGameManager(GameManager gm)
+    public static class Locator
     {
-        GameManager = gm;
-    }
+        public static void ProvideGameManager(GameManager gm)
+        {
+            GameManager = gm;
+        }
 
-    public static GameManager GameManager { get; private set; }
+        public static GameManager GameManager { get; private set; }
+    }
 }

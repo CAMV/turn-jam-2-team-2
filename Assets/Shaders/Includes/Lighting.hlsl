@@ -87,4 +87,18 @@ void CalculateAlpha_float(float RedWeight, float GreenWeight, float BlueWeight, 
     Alpha = clamp(Alpha, 0, 1);
 }
 
+
+void AlphaByOneLight_float(float3 WorldPosition, float3 WorldNormal, float3 LightPosition, float LightIntensity, float LightRange,
+    out float Alpha) {
+
+    Alpha = 0;
+
+#ifndef SHADERGRAPH_PREVIEW
+    half3 direction = WorldPosition - LightPosition;
+    half NdotL = 1 - saturate(dot(WorldNormal, direction));
+    half attn = 1 - clamp(distance(WorldPosition, LightPosition) / LightRange, 0, 1);
+    Alpha += lerp(0, NdotL * LightIntensity, attn);
+#endif
+}
+
 #endif

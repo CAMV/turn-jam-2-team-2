@@ -14,6 +14,7 @@ namespace TurnJam2
 
         private Transform _mainCameraTransform;
         private Vector3 _warpPosition;
+        private IInteractable _interactable;
 
         private void Awake()
         {
@@ -29,6 +30,12 @@ namespace TurnJam2
         }
 
         private void Update()
+        {
+            UpdateMovement();
+            CheckInteraction();
+        }
+
+        private void UpdateMovement()
         {
             var input = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
 
@@ -47,7 +54,14 @@ namespace TurnJam2
             var targetRotation = Quaternion.LookRotation(direction, transform.up);
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
         }
-        
+
+        private void CheckInteraction()
+        {
+            if (_interactable == null || !Input.GetKeyDown(KeyCode.Space)) return;
+            
+            _interactable.Interact();
+        }
+
         private void LateUpdate()
         {
             if (_warpPosition == Vector3.zero) return;
@@ -60,6 +74,20 @@ namespace TurnJam2
         public void WarpToPosition(Vector3 newPosition)
         {
             _warpPosition = newPosition;
+        }
+
+        public void SetInteractable(IInteractable interactable)
+        {
+            if (_interactable != null) return;
+            
+            _interactable = interactable;
+        }
+
+        public void RemoveInteractable(IInteractable interactable)
+        {
+            if (_interactable != interactable) return;
+
+            _interactable = null;
         }
     }
 }

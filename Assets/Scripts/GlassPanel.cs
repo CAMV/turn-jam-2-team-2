@@ -43,7 +43,7 @@ namespace TurnJam2
             var intensity = (_lightSource.MaxIntensity / Mathf.Pow(Mathf.Clamp(distanceToPlayer, 1, int.MaxValue), 2)) *
                             lghtDotFwrd;
 
-            if (_lightSource.ClosestLightInteractor == this)
+            if (ReferenceEquals(_lightSource.ClosestLightInteractor, this))
             {
                 _lightSource.Light.intensity = _lightSource.MaxIntensity - intensity;
             }

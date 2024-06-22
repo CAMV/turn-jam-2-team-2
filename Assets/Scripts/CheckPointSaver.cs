@@ -18,7 +18,7 @@ namespace TurnJam2
         public void ReSpawn(Player _player)
         {
             Debug.Log("Respawn");
-            _player.WarpToPosition(transform.position);
+            _player.WarpToPosition(_spawnPoint.position);
         }
     }
 }

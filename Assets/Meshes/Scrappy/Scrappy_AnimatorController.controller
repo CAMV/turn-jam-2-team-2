@@ -39,7 +39,7 @@ AnimatorStateMachine:
     m_Position: {x: 100, y: 270, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 7502604960240284926}
-    m_Position: {x: 569, y: 265, z: 0}
+    m_Position: {x: 570, y: 270, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -56,7 +56,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Subject_AnimatorController
+  m_Name: Scrappy_AnimatorController
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: Speed
@@ -99,7 +99,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -203655887218126122, guid: 345cc11f1f0d24e4ab892766ee755bb0, type: 3}
+  m_Motion: {fileID: -4067915852145059450, guid: ac1d61d335f9d3a4ea65f586246bafb0, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -126,7 +126,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -203655887218126122, guid: 4074af4a180641f4e8a7a311898b4dd9, type: 3}
+  m_Motion: {fileID: -3889830323219305035, guid: ac1d61d335f9d3a4ea65f586246bafb0, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 

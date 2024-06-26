@@ -12,7 +12,6 @@ namespace TurnJam2
         {
             if (other.gameObject.TryGetComponent<Player>(out _))
             {
-                Debug.Log("Invoke!!!");
                 OnFall?.Invoke();
             }
         }

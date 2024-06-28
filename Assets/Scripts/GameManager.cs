@@ -9,6 +9,8 @@ namespace TurnJam2
         [SerializeField] private CheckPointSaver _fallbackCheckpoint;
         
         private CheckPointSaver _checkPoint;
+
+        public Player Player => _player;
     
         private void Awake()
         {

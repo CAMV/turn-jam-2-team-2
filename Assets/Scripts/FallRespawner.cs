@@ -8,10 +8,14 @@ namespace TurnJam2
     {
         public event Action OnFall;
 
+        [SerializeField] 
+        private string _fallSoundName;
+        
         private void OnTriggerEnter(Collider other)
         {
             if (other.gameObject.TryGetComponent<Player>(out _))
             {
+                Locator.AudioHandler.Play(_fallSoundName, true);
                 OnFall?.Invoke();
             }
         }

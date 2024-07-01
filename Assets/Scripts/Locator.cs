@@ -7,6 +7,9 @@ namespace TurnJam2
             GameManager = gm;
         }
 
+        public static void ProvideAudioHandler(AudioHandler audioHandler) => AudioHandler = audioHandler;
+
         public static GameManager GameManager { get; private set; }
+        public static AudioHandler AudioHandler { get; private set; }
     }
 }
